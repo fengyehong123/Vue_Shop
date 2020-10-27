@@ -1,30 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// 导入我们自定义的路由组件
 import Login from './components/Login.vue'
-import Home from './components/Home.vue'
 
 Vue.use(Router)
 
-const router = new Router({
+export default new Router({
   routes: [
-    { path: '/', redirect: '/login' },
-    { path: '/login', component: Login },
-    { path: '/home', component: Home }
+    /* 当用于访问的是根路径/的时候,重定向到 /login 地址 */
+    { path: '/', redirect: "/login" },
+    /* 我们自定义的路由规则,当访问 /login 路径的时候,会路由到Login组件 */
+    { path: '/login', component: Login }
   ]
 })
-
-// 挂载路由导航守卫
-router.beforeEach((to, from, next) => {
-  // to 将要访问的路径
-  // from 代表从哪个路径跳转而来
-  // next 是一个函数，表示放行
-  //     next()  放行    next('/login')  强制跳转
-
-  if (to.path === '/login') return next()
-  // 获取token
-  const tokenStr = window.sessionStorage.getItem('token')
-  if (!tokenStr) return next('/login')
-  next()
-})
-
-export default router
