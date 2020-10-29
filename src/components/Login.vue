@@ -5,20 +5,33 @@
             <div class="avatar_box">
                 <img src="../assets/logo.png" alt="">
             </div>
-            <!-- 登录表单区域 -->
-            <el-form label-width="0px" class="login_form">
-                <!-- 用户名 -->
-                <el-form-item>
-                    <el-input></el-input>
+            <!-- 
+                登录表单区域
+                :rules="loginFormRules" 表单区域的验证对象
+                ref="loginFormRef" 表单的实例对象,实例对象的名称可以任意取
+             -->
+            <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
+                <!-- 
+                    用户名
+                    prop="username" 使用 loginFormRules中的username来进行用户名输入校验
+                 -->
+                <el-form-item prop="username">
+                    <!-- 
+                        prefix-icon 在输入框的前面添加图标
+                        此处使用了非elementUI图标,使用的是阿里图标库
+                     -->
+                    <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
                 </el-form-item>
                 <!-- 密码 -->
-                <el-form-item>
-                    <el-input></el-input>
+                <el-form-item prop="password">
+                    <el-input v-model="loginForm.password" type="password" 
+                    prefix-icon="iconfont icon-3702mima"></el-input>
                 </el-form-item>
                 <!-- 按钮区域 -->
                 <el-form-item class="btns">
-                    <el-button type="primary">登录</el-button>
-                    <el-button type="info">重置</el-button>
+                    <el-button type="primary" @click="login">登录</el-button>
+                    <!-- 为重置按钮添加表单重置事件 -->
+                    <el-button type="info" @click="resetLoginForm">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -27,7 +40,53 @@
 
 <script>
 export default {
-    
+    data() {
+        return {
+            // 登录表单绑定的数据对象
+            loginForm: {
+                username: '',
+                password: ''
+            },
+            // 表单的验证规则对象
+            loginFormRules: {
+                // 验证用户名是否合法
+                username: [
+                    { required: true, message: '请输入登录名称', trigger: 'blur' },
+                    { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+                ],
+                // 验证密码是否合法
+                password: [
+                    { required: true, message: '请输入登录密码', trigger: 'blur' },
+                    { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+                ]
+            }
+        }
+    },
+    methods: {
+        // 点击重置按钮,重置登录表单
+        resetLoginForm() {
+            // loginFormRef 是我们自定义的表单对象的名称
+            this.$refs.loginFormRef.resetFields();
+        },
+        // 表单登录之前的预验证
+        login() {
+            // validate中的回调函数,返回预验证的结果
+            this.$refs.loginFormRef.validate(async (valid) => {
+                // 如果没有通过校验,就不能发起请求
+                if(!valid) return;
+                /*
+                    通过校验则发送ajax的post请求
+                    ajax发送的请求返回一个对象,该对象有若干个属性,我们可以使用ES6的新语法
+                    通过 {data: res} 来将对象中的data属性解构出来,解构出来的数据对象重命名为res
+                */ 
+                const {data: res} = await this.$http.post("login", this.loginForm);
+                if(res.meta.status !== 200) {
+                    return console.log("登录失败");
+                }
+                console.log("登录成功");
+            });
+        }
+    }
 }
 </script>
 
@@ -79,7 +138,9 @@ export default {
         position: absolute;
         width: 100%;
         bottom: 0;
+        // 原本设置padding会撑大盒子,但是由于我们添加了box-sizing: border-box; 所以不会撑大盒子
         padding: 0 20px;
+        // CSS3语法,border和padding的设置不会撑大盒子,不会影响盒子的宽高
         box-sizing: border-box;
     }
 
