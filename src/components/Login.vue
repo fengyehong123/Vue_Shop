@@ -44,8 +44,8 @@ export default {
         return {
             // 登录表单绑定的数据对象
             loginForm: {
-                username: '',
-                password: ''
+                username: 'admin',
+                password: '123456'
             },
             // 表单的验证规则对象
             loginFormRules: {
@@ -81,9 +81,17 @@ export default {
                 */ 
                 const {data: res} = await this.$http.post("login", this.loginForm);
                 if(res.meta.status !== 200) {
-                    return console.log("登录失败");
+                    // 使用了elementUI的message组件
+                    return this.$message.error("登录失败!");
                 }
-                console.log("登录成功");
+                // 登录成功之后之后的信息提示
+                this.$message.success("登录成功!");
+                // 将项目登录成功之后的token保存到客户端的sessionStorage中
+                // token的具体的值是由后端返回给前端的
+                window.sessionStorage.setItem("token", res.data.token);
+                
+                // 通过编程式导航跳转到后台主页,路由地址是 /home
+                this.$router.push("/home");
             });
         }
     }
