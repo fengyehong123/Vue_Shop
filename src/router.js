@@ -4,6 +4,8 @@ import Router from 'vue-router'
 import Login from './components/Login.vue'
 // 导入我们自定义的Home组件
 import Home from './components/Home.vue'
+// 导入我们自定义的欢迎组件
+import Welcome from './components/Welcome.vue'
 
 Vue.use(Router)
 
@@ -14,8 +16,18 @@ const router = new Router({
     { path: '/', redirect: "/login" },
     /* 我们自定义的路由规则,当访问 /login 路径的时候,会路由到Login组件 */
     { path: '/login', component: Login },
-    /* 我们自定义的home组件 */
-    { path: '/home', component: Home },
+    /* 
+      我们自定义的home组件,home组件中还有一个嵌套的Welcome子组件,
+      因此我们在home路由中嵌套子路由
+      redirect: '/welcome'
+        添加重定向功能,每当访问/home路径的时候,就重定向到/welcome路径中,访问welcome组件
+    */
+    { path: '/home', 
+      component: Home, 
+      redirect: '/welcome',
+      children: [
+      { path: '/welcome', component: Welcome }
+    ]},
   ]
 })
 
