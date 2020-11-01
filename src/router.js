@@ -6,6 +6,8 @@ import Login from './components/Login.vue'
 import Home from './components/Home.vue'
 // 导入我们自定义的欢迎组件
 import Welcome from './components/Welcome.vue'
+// 导入用户组件
+import Users from './components/user/Users.vue'
 
 Vue.use(Router)
 
@@ -26,8 +28,11 @@ const router = new Router({
       component: Home, 
       redirect: '/welcome',
       children: [
-      { path: '/welcome', component: Welcome }
-    ]},
+        { path: '/welcome', component: Welcome },
+        // Users组件是Home的子组件
+        { path: '/users', component: Users }
+      ]
+    },
   ]
 })
 

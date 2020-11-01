@@ -6,3 +6,24 @@ body,
   margin: 0;
   padding: 0;
 }
+
+/* 面包屑导航底外边距 */
+.el-breadcrumb {
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+
+/* 卡片视图 */
+.el-card {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 表格和输入框区域之前的顶部间隙 */
+.el-table {
+  margin-top: 15px;
+  font-size: 12px;
+}
+/* 分页组件和表格之间添加间隙 */
+.el-pagination {
+  margin-top: 15px;
+}

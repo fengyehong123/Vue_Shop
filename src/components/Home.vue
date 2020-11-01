@@ -26,6 +26,8 @@
                     :router="true" 对整个侧边栏开启了路由模式
                         是否使用vue-router的模式,启用该模式会在激活导航的时候
                         以index的值作为path进行路由跳转
+                    :default-active="activePath"
+                        当前激活菜单的index,指定的index会被高亮(我们点击的左侧侧边栏菜单会被高亮)
                  -->
                 <el-menu background-color="#333744" 
                 text-color="#fff" 
@@ -33,7 +35,8 @@
                 :unique-opened="true"
                 :collapse="isCollapse"
                 :collapse-transition="false"
-                :router="true"> 
+                :router="true"
+                :default-active="activePath"> 
                     <!-- 
                         一级菜单
                         :index="item.id" 每一个菜单栏独有的id,用来指定每一个菜单栏的展开和关闭
@@ -52,8 +55,12 @@
                             :index="subItem.path
                                 我们给侧边栏开启了路由模式,
                                 启用该模式会在激活导航的时候,会以index的值作为path进行路由跳转
+                             @click="saveNavState('/' + subItem.path)"
                          -->
-                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
+                        <el-menu-item :index="'/' + subItem.path" 
+                        v-for="subItem in item.children" 
+                        :key="subItem.id"
+                        @click="saveNavState('/' + subItem.path)">
                             <!-- 二级菜单的模板区域 --> 
                             <template slot="title">
                                 <!-- 二级菜单栏图标 -->
@@ -67,7 +74,7 @@
             </el-aside>
             <!-- 右侧内容主体 -->
             <el-main>
-                <!-- 路由占位符 -->
+                <!-- 路由占位符,把路由对应的组件展示在此处 -->
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -91,11 +98,15 @@ export default {
             },
             // 控制菜单栏的展开与折叠
             isCollapse: false,
+            // 被点击激活的左侧侧边栏链接地址
+            activePath: ''
         }
     },
     // 生命周期函数,当页面一加载就请求后端获取数据
     created(){ 
         this.getMenuList();
+        // 当页面一加载就从sessionStorage中获取用户点击的是那个左侧侧边栏项目
+        this.activePath = window.sessionStorage.getItem("activePath");
     },
     methods: {
         logout() {
@@ -118,6 +129,11 @@ export default {
         // 点击按钮,切换菜单的折叠与展开
         toggleCollapse() {
             this.isCollapse = !this.isCollapse;
+        },
+        // 保存链接的激活状态到sessionStorage中
+        saveNavState(activePath) {
+            window.sessionStorage.setItem('activePath', activePath);
+            this.activePath = activePath;
         }
     }
 }
