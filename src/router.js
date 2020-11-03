@@ -8,12 +8,16 @@ import Home from './components/Home.vue'
 import Welcome from './components/Welcome.vue'
 // 导入用户组件
 import Users from './components/user/Users.vue'
+// 导入权限列表组件
+import Rights from './components/power/Rights.vue'
+// 导入角色列表组件
+import Roles from './components/power/Roles.vue'
 
 Vue.use(Router)
 
 // 定义一个路由对象
 const router = new Router({
-  routes: [
+  routes: [ 
     /* 当用于访问的是根路径/的时候,重定向到 /login 地址 */
     { path: '/', redirect: "/login" },
     /* 我们自定义的路由规则,当访问 /login 路径的时候,会路由到Login组件 */
@@ -30,7 +34,10 @@ const router = new Router({
       children: [
         { path: '/welcome', component: Welcome },
         // Users组件是Home的子组件
-        { path: '/users', component: Users }
+        { path: '/users', component: Users },
+        // Rights组件是Home的子组件
+        { path: '/rights', component: Rights },
+        { path: '/roles', component: Roles }
       ]
     },
   ]
