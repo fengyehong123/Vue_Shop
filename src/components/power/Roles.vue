@@ -76,7 +76,8 @@
         <el-dialog
         title="分配权限"
         :visible.sync="setRightDialogVisible"
-        width="50%">
+        width="50%"
+        @close="setRightDialogClosed">
             <!-- 
                 树形控件
                 :data="树形控件的数据源"
@@ -84,16 +85,20 @@
                 show-checkbox 展示复选框
                 node-key="id" 当我们选中该复选框的时候,指定选中的是id值(也可以修改为选中的是其他的属性)
                 default-expand-all 展开所有的节点
+                :default-checked-keys="树形控件默认选中的对象"
+                ref="treeRef" 树形组件的引用,可以通过这个对象获取整个树形组件的对象
             -->
             <el-tree 
             :data="rightsList" 
             :props="treeProps" 
             show-checkbox
             node-key="id"
-            default-expand-all></el-tree>
+            default-expand-all
+            :default-checked-keys="defKeys"
+            ref="treeRef"></el-tree>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="setRightDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="setRightDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="allotRights">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -115,7 +120,11 @@ export default {
                 label: 'authName',
                 // 指定子树为节点对象的某个属性值
                 children: 'children'
-            }
+            },
+            // 默认选中的节点id值数组
+            defKeys: [],
+            // 当前即将分配权限的角色id
+            roleId: '',
         }
     },
     // 声明周期函数
@@ -160,7 +169,9 @@ export default {
             role.children = res.data
         },
         // 展示分配权限的对话框
-        async showSetRightDialog() {
+        async showSetRightDialog(role) {
+            // 将角色的id保存到role对象中
+            this.roleId = role.id
             // 获取所有权限的数据
             const {data: res} = await this.$http.get(`rights/tree`)
             if(res.meta.status !== 200) {
@@ -168,8 +179,67 @@ export default {
             }
             // 把后端获取的数据赋值给数据对象
             this.rightsList = res.data
+
+            // 递归获取三级节点的id
+            this.getLeafKeys(role, this.defKeys)  
+
             // 让对话框可以进行展示
             this.setRightDialogVisible = true
+        },
+        // 通过递归的形式,获取角色下所有三级权限的id,并且保存到defKey是数组中
+        getLeafKeys(node, arr) {
+            // 如果当前的node节点不包含children属性,则是三级节点
+            if(!node.children) {
+                return arr.push(node.id)
+            }
+
+            // 如果当前节点包含children属性,那么就通过递归的方式进一步调用
+            node.children.forEach(item => {
+                // 通过递归的方式进一步进行查询
+                return this.getLeafKeys(item, arr)
+            })
+        },
+        // 监听分配权限对话框的关闭事件
+        setRightDialogClosed() {
+            // 当我们关闭权限分配对话框的时候,需要把加载到数据对象中的数据清空
+            // 防止其他对象的权限分配对话框打开的时候,加载到我们上一次加载的数据
+            this.defKeys = []
+        },
+        // 点击为角色分配权限
+        async allotRights() {
+            // 获取树形组件中全选和半选状态下的id
+            const keys = [
+                /*
+                    ... 为js的展开运算符,主要用来进行数组合并
+                    var array1 = [1, 2, 3];
+                    var array2 = [4, 5, 6];
+                    var array3 = [...array1, ...array2, 7, 8];  // [1,2,3,4,5,6,7,8]
+                    或者
+                    array1.push(...array2 )  // [1,2,3,4,5,6,7,8]
+                */
+                // 若节点可被选择(即show-checkbox为true),则返回目前被选中的节点的key所组成的数组
+                // getCheckedKeys()是树形组件所提供的方法,用来获取树形组件中获取到的节点
+                ...this.$refs.treeRef.getCheckedKeys(),
+                // 若节点可被选择(即show-checkbox为true),则返回目前半选中的节点的key所组成的数组
+                ...this.$refs.treeRef.getHalfCheckedKeys()
+            ]
+
+            // 把数组转换为以逗号分隔的字符串
+            const idStr = keys.join(',')
+
+            // 发起网络请求,添加权限
+            const {data: res} = await this.$http.post(`roles/${this.roleId}/rights`, {rids: idStr})
+            if(res.meta.status !== 200) {
+                return this.$message.error("分配权限失败!")
+            }
+
+            this.$message.success("分配权限成功!");
+
+            // 刷新数据列表
+            this.getRolesList()
+
+            // 隐藏整个对话框
+            this.setRightDialogVisible = false
         }
     }
 }
