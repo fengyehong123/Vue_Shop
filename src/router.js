@@ -12,6 +12,10 @@ import Users from './components/user/Users.vue'
 import Rights from './components/power/Rights.vue'
 // 导入角色列表组件
 import Roles from './components/power/Roles.vue'
+// 导入商品分类组件
+import Cate from './components/goods/Cate.vue'
+// 导入参数组件
+import Params from './components/goods/Params.vue'
 
 Vue.use(Router)
 
@@ -37,9 +41,11 @@ const router = new Router({
         { path: '/users', component: Users },
         // Rights组件是Home的子组件
         { path: '/rights', component: Rights },
-        { path: '/roles', component: Roles }
+        { path: '/roles', component: Roles },
+        { path: '/categories', component: Cate },
+        { path: '/params', component: Params }
       ]
-    },
+    },  
   ]
 })
 

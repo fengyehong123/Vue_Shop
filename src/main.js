@@ -8,6 +8,8 @@ import './assets/fonts/iconfont.css'
 import './assets/css/global.css'
 // 导入axios请求库
 import axios from 'axios'
+// 导入第三方的表格插件
+import TreeTable from 'vue-table-with-tree-grid'
 
 // 设置ajax请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
@@ -25,6 +27,10 @@ axios.interceptors.request.use(config => {
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
+
+// 将第三方插件注册到Vue的全局可用组件中,参数1: 自定义的组件名称 参数2: 引入的插件对象
+// 因为我们把组件名称定义为 tree-table了,所以使用的时候,直接<tree-table>就可以直接使用了
+Vue.component('tree-table', TreeTable)
 
 new Vue({
   router,
