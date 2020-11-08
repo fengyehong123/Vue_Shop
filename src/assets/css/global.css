@@ -29,3 +29,11 @@ body,
 .el-pagination {
   margin-top: 15px;
 }
+/* 步骤条组件的间隙 */
+.el-steps {
+  margin: 15px 0;
+}
+/* 重置步骤条字体大小 */
+.el-step__title {
+  font-size: 13px;
+}

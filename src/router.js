@@ -16,6 +16,10 @@ import Roles from './components/power/Roles.vue'
 import Cate from './components/goods/Cate.vue'
 // 导入参数组件
 import Params from './components/goods/Params.vue'
+// 导入商品列表组件
+import GoodsList from './components/goods/List.vue'
+// 导入商品添加组件
+import Add from './components/goods/Add.vue'
 
 Vue.use(Router)
 
@@ -43,7 +47,9 @@ const router = new Router({
         { path: '/rights', component: Rights },
         { path: '/roles', component: Roles },
         { path: '/categories', component: Cate },
-        { path: '/params', component: Params }
+        { path: '/params', component: Params },
+        { path: '/goods', component: GoodsList },
+        { path: '/goods/add', component: Add }
       ]
     },  
   ]
@@ -60,15 +66,15 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // 如果用户访问的是登录页,直接放行
   if(to.path === "/login"){
-    return next();
+    return next()
   }
 
   // 如果用户访问的是需要登录之后才能看到的网页的话,需要先获取并校验token
   const tokenStr = window.sessionStorage.getItem("token");
   // 如果没有token的话,就强制跳转到登录页
-  if(!tokenStr) return next("/login");
+  if(!tokenStr) return next("/login")
   // 如果有token,并且通过校验的话,就强制跳转到登录页面
-  next();
+  next()
 })
 
 // 将路由对象暴露出去

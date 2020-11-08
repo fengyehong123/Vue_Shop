@@ -32,6 +32,26 @@ Vue.config.productionTip = false
 // 因为我们把组件名称定义为 tree-table了,所以使用的时候,直接<tree-table>就可以直接使用了
 Vue.component('tree-table', TreeTable)
 
+// 定义一个全局的时间过滤器
+Vue.filter("dataFormat", function(originVal) {
+  // 通过传入的事件参数,构建出一个时间对象
+  const dt = new Date(originVal)
+  // 获取4位数的年
+  const y = dt.getFullYear()
+  // 获取月份(要求是两位数,不足两位补0)
+  // dt.getMonth() + 1 + '' 数字转字符串
+  // .padStart(2, '0') 要求字符串是两位,不足两位的话,用0来补齐
+  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+  // 获取当前的日期
+  const d = (dt.getDate() + '').padStart(2, '0')
+  // 获取时分秒
+  const hh = (dt.getHours() + '').padStart(2, '0')
+  const mm = (dt.getMinutes() + '').padStart(2, '0')
+  const ss = (dt.getSeconds() + '').padStart(2, '0')
+
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+})
+
 new Vue({
   router,
   render: h => h(App)
