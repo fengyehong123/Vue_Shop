@@ -35,6 +35,9 @@ import {
     TabPane,
     Steps,
     Step,
+    Checkbox,
+    CheckboxGroup,
+    Upload
 } from 'element-ui'
 
 // Vue.use() 注册为全局可用的组件
@@ -70,6 +73,9 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Steps)
 Vue.use(Step)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Upload)
 
 // $message是我们自定义的属性名称,Message是我们导入的组件的名称
 // 下面的代码代表把弹窗组件挂载到Vue的原型对象上,这样的话每一个组件都可以通过this访问到$message

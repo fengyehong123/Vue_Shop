@@ -10,6 +10,12 @@ import './assets/css/global.css'
 import axios from 'axios'
 // 导入第三方的表格插件
 import TreeTable from 'vue-table-with-tree-grid'
+// 导入第三方的富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+// 导入第三方富文本编辑器对应的样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 // 设置ajax请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
@@ -31,6 +37,8 @@ Vue.config.productionTip = false
 // 将第三方插件注册到Vue的全局可用组件中,参数1: 自定义的组件名称 参数2: 引入的插件对象
 // 因为我们把组件名称定义为 tree-table了,所以使用的时候,直接<tree-table>就可以直接使用了
 Vue.component('tree-table', TreeTable)
+// 将富文本编辑器注册为全局可用组件
+Vue.use(VueQuillEditor)
 
 // 定义一个全局的时间过滤器
 Vue.filter("dataFormat", function(originVal) {
