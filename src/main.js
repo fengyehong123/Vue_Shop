@@ -16,6 +16,10 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+// 导入nprogress进度条插件
+import NProgress from 'nprogress'
+// 导入进度条插件对应的样式
+import 'nprogress/nprogress.css'
 
 // 设置ajax请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
@@ -23,11 +27,21 @@ axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
 // 在将axios请求挂载到Vue原型之前,先给axios请求拦截器添加token,保证拥有获取数据的权限
 // use可以给请求添加一个回调函数,回调函数中的config就是进行配置对象
 axios.interceptors.request.use(config => {
+
+  // 在request拦截器中展示进度条
+  NProgress.start()
+
   // 为请求头对象添加Token验证的Authorization字段
   config.headers.Authorization = window.sessionStorage.getItem("token");
   // 最后要把配置对象给返回
   return config;
 });
+
+// 在response拦截器中隐藏进度条
+axios.interceptors.response.use(config => {
+  NProgress.done()
+  return config
+})
 
 // 将axios挂载到Vue的原型对象上,这样每一个vue对象都可以直接通过this直接访问$http,从去发送ajax请求
 Vue.prototype.$http = axios
