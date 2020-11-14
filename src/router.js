@@ -1,29 +1,40 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 // 导入我们自定义的登录组件
-import Login from './components/Login.vue'
-// 导入我们自定义的Home组件
-import Home from './components/Home.vue'
-// 导入我们自定义的欢迎组件
-import Welcome from './components/Welcome.vue'
+// 传统导入组件的方式
+// import Login from './components/Login.vue'
+// import Home from './components/Home.vue'
+// import Welcome from './components/Welcome.vue'
+
+// 使用懒加载的方式导入我们自定义的Login组件
+const Login = () => import(/* webpackChunkName: "login_home_welcome" */ './components/Login.vue')
+// 使用懒加载的方式导入我们自定义的Home组件
+const Home = () => import(/* webpackChunkName: "login_home_welcome" */ './components/Home.vue')
+// 使用懒加载的方式导入我们自定义的欢迎组件
+const Welcome = () => import(/* webpackChunkName: "login_home_welcome" */ './components/Welcome.vue')
+
 // 导入用户组件
-import Users from './components/user/Users.vue'
+const Users = () => import(/* webpackChunkName: "Users_Rights_Roles" */ './components/user/Users.vue')
 // 导入权限列表组件
-import Rights from './components/power/Rights.vue'
+const Rights = () => import(/* webpackChunkName: "Users_Rights_Roles" */ './components/power/Rights.vue')
 // 导入角色列表组件
-import Roles from './components/power/Roles.vue'
+const Roles = () => import(/* webpackChunkName: "Users_Rights_Roles" */ './components/power/Roles.vue')
+
 // 导入商品分类组件
-import Cate from './components/goods/Cate.vue'
+const Cate = () => import(/* webpackChunkName: "Cate_Params" */ './components/goods/Cate.vue')
 // 导入参数组件
-import Params from './components/goods/Params.vue'
+const Params = () => import(/* webpackChunkName: "Cate_Params" */ './components/goods/Params.vue')
+
 // 导入商品列表组件
-import GoodsList from './components/goods/List.vue'
+const GoodsList = () => import(/* webpackChunkName: "GoodsList_Add" */ './components/goods/List.vue')
 // 导入商品添加组件
-import Add from './components/goods/Add.vue'
+const Add = () => import(/* webpackChunkName: "GoodsList_Add" */ './components/goods/Add.vue')
+
 // 导入订单模块
-import Order from './components/order/Order.vue'
+const Order = () => import(/* webpackChunkName: "Order_Report" */ './components/order/Order.vue')
 // 导入报表组件
-import Report from './components/report/Report.vue'
+const Report = () => import(/* webpackChunkName: "Order_Report" */ './components/report/Report.vue')
 
 Vue.use(Router)
 
